@@ -1,0 +1,290 @@
+Where to keep and how to use shared code in Jenkins pipelines?
+ Answer:
+Shared code in Jenkins pipelines is kept in Jenkins Shared Libraries, which are centralized Groovy code repositories.
+You configure shared libraries in Jenkins under Manage Jenkins → Configure System → Global Pipeline Libraries by adding the library name and the source code repository URL.
+In your pipeline script, you use the shared library by adding this line at the top:
+groovy@Library('my-shared-library') 
+
+What triggers are available in a Jenkins pipeline?
+
+⭐️ Answer:
+
+Jenkins pipelines can be triggered by multiple methods:
+SCM Polling (Poll SCM): Jenkins polls the source code repository at scheduled intervals using cron syntax to detect changes and trigger builds automatically.
+Webhooks: Source code repositories like GitHub or GitLab can send webhooks to Jenkins to trigger jobs immediately on code push or pull request events.
+Scheduled Builds: Using the "Build periodically" option, pipelines can run on a fixed schedule defined by cron expressions.
+Remote Trigger: Jenkins jobs can be triggered remotely via Jenkins Remote API using curl or other HTTP clients.
+Upstream Job Trigger: One Jenkins job can trigger another using the "Build other projects" option, creating job dependencies.
+Manual Trigger: Users can manually start a pipeline from the Jenkins UI or via API.
+These triggers can be combined or customized in declarative or scripted pipelines to suit CI/CD workflows.
+
+how to specify which provider to use in a Terraform resource block?
+
+⭐️ Answer:
+
+In Terraform, you specify the provider for a resource by using the provider argument inside the resource block.
+This is especially important when you have multiple provider configurations with aliases.
+
+How to prevent Terraform from deleting a database resource even if terraform destroy is run?
+
+⭐️ Answer:
+
+Use the lifecycle block with the prevent_destroy = true attribute inside the resource block to protect the resource from deletion.
+This tells Terraform to block any destroy operation on that resource, even if terraform destroy is executed.
+
+What are some common Terraform functions you use?
+
+⭐️ Answer:
+
+
+I use several Terraform built-in functions to manipulate data and control configurations, including:
+
+count(list, index) — to get the number of elements or count items.
+element(list, index) — to select a single element from a list by index.
+lookup(map, key, default) — to get a value from a map with a fallback default.
+length(list) — to get the length of a list.
+toset(list) — to convert a list to a set, removing duplicates and order.
+distinct(list) — to remove duplicates from a list while preserving order.
+lower(string) and upper(string) — to convert strings to lowercase or uppercase.
+split(delimiter, string) — to split a string into a list by a delimiter.
+join(delimiter, list) — to join a list of strings into a single string with a delimiter.
+
+These functions help in dynamic and flexible Terraform configurations, such as conditional resource creation, string manipulation, and data lookups.
+
+  What is the difference between the Terraform merge function and the concat function?
+
+⭐️ Answer:
+
+The merge function combines two or more maps into a single map. If there are duplicate keys, the last map's value overrides the previous ones. It is used to combine key-value pairs.
+The concat function combines two or more lists into a single list by appending elements in order. It is used to join lists, not maps.
+
+  locals {
+  map1 = { a = 1, b = 2 }
+  map2 = { b = 3, c = 4 }
+  merged_map = merge(local.map1, local.map2)
+  # Result: { a = 1, b = 3, c = 4 }
+}
+Example of concat:
+
+hcllocals {
+  list1 = ["apple", "banana"]
+  list2 = ["cherry", "date"]
+  combined_list = concat(local.list1, local.list2)
+  # Result: ["apple", "banana", "cherry", "date"]
+}
+
+Can the Terraform merge function be used on a list?
+
+⭐️ Answer:
+
+No, the merge function cannot be used on lists; it is specifically designed to combine maps (key-value pairs).
+Using merge on lists will cause an error because it expects map inputs.
+To combine lists, use the concat function, which appends multiple lists into one list.
+  Can you explain a use case and problem statement you solved using Python scripting?
+
+⭐️ Answer:
+
+One use case I handled was automating Kafka topic management in GKE using Python scripts with the Kubernetes Python client and Kafka Admin client.
+Problem: In a retail environment, new product catalogs required automatic creation of Kafka topics (e.g., catalog-updates) with proper access control lists (ACLs). Manual topic creation was error-prone and slow.
+Solution: I developed a Python script that runs inside a Kubernetes pod, triggered by CI/CD pipelines (Cloud Build or GitHub Actions), which automatically creates Kafka topics via Strimzi CRDs and sets ACLs.
+This automation ensured consistent topic creation, reduced manual errors, and sped up deployment cycles.
+The script used Kubernetes API to apply manifests and Kafka Admin client to manage topics securely with Workload Identity for authentication.
+
+  Do you have experience creating automated scripts for backups like volume or blob storage backups?
+
+⭐️ Answer:
+
+Yes, I have experience automating backups for volumes and blob storage using scripts.
+In my previous role, I implemented automated backup solutions for Azure VMs and storage using PowerShell and Python scripts.
+For example, I automated snapshot creation and retention policies for Azure Managed Disks and Blob Storage to ensure data protection and disaster recovery readiness.
+I also used Azure CLI commands in scripts to schedule backups and verify backup status.
+Automation included cross-region replication and backup validation to meet compliance and availability requirements.
+
+  Which Python library do you use for AWS deployments?
+
+⭐️ Answer:
+
+For AWS deployments, I primarily use the boto3 library, which is the official AWS SDK for Python.
+Boto3 allows me to interact with AWS services programmatically, such as EC2, S3, IAM, and more.
+I use boto3 to automate infrastructure provisioning, manage resources, and perform operations like creating VPCs, managing instances, and handling backups.
+Additionally, I use standard Python libraries like os and sys for environment interaction and scripting support.
+
+ Example snippet to list all VPCs using boto3:
+
+pythonimport boto3  # AWS SDK for Python
+import json  # For formatting output
+
+client = boto3.client('ec2', region_name='us-east-1')  # Create EC2 client for a region
+
+all_vpcs = client.describe_vpcs().get('Vpcs')  # Get list of VPCs
+
+for vpc in all_vpcs:  
+    print(json.dumps(vpc, indent=2))  # Print each VPC in readable JSON format
+
+
+  How to read a JSON file and convert it into a hash table or object in PowerShell?
+
+⭐️ Answer:
+
+In PowerShell, you can use the Get-Content cmdlet to read the JSON file content and then convert it into a PowerShell object (hash table) using ConvertFrom-Json.
+The command is:
+powershell$jsonObject = Get-Content -Path "path\to\file.json" -Raw | ConvertFrom-Json
+-Raw ensures the entire file content is read as a single string, which is necessary for proper JSON parsing.
+After this, $jsonObject will hold the JSON data as a PowerShell object or hash table, which you can access and manipulate easily.
+
+ How to restrict certain pods to be deployed only on a legacy node in a Kubernetes cluster?
+
+⭐️ Answer:
+
+To control which pods get deployed on specific nodes like a legacy machine, Kubernetes provides several placement controls: Node Selector, Node Affinity, and Taints & Tolerations.
+The best approach here is to use Node Affinity or Taints and Tolerations rather than Pod Affinity/Anti-Affinity.
+Node Affinity lets you specify rules in the pod spec to schedule pods only on nodes with specific labels (e.g., label the legacy node as node-type=legacy).
+Taints and Tolerations allow you to taint the legacy node so that only pods with matching tolerations can be scheduled there, preventing other pods from deploying on it.
+Pod Affinity/Anti-Affinity controls pod co-location but does not restrict pods to specific nodes based on node characteristics.
+
+  affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: node-type
+          operator: In
+          values:
+          - legacy
+  
+  Why use Taints and Tolerations in Kubernetes?
+
+⭐️ Answer:
+
+Taints and Tolerations are used to control which pods can be scheduled on specific nodes.
+Taints are applied to nodes to repel pods that do not tolerate the taint.
+Tolerations are applied to pods to allow them to be scheduled on nodes with matching taints.
+This mechanism helps prevent pods from being deployed on certain nodes by default, such as legacy nodes or master nodes.
+
+How to run one instance of a logging container on each Kubernetes node?
+
+⭐️ Answer:
+
+To run exactly one instance of a pod on each node, use a DaemonSet in Kubernetes.
+A DaemonSet ensures that a copy of a pod runs on all (or selected) nodes in the cluster.
+This is ideal for logging, monitoring, or other node-level agents that need to run on every node.
+You can control which nodes run the DaemonSet pods using node selectors, node affinity, or tolerations if needed.
+
+Which Kubernetes workload ensures one pod runs on each node?
+
+⭐️ Answer:
+
+The Kubernetes workload to use is a DaemonSet.
+DaemonSet ensures exactly one pod runs on every node in the cluster.
+It automatically creates a pod on each node, and if new nodes are added, pods are created there as well.
+This is ideal for running monitoring agents, logging agents, or any node-level services that must run on all nodes.
+  
+What is the difference between StatefulSet and Deployment in Kubernetes?
+⭐️ Answer:
+Deployment is used for managing stateless applications. It manages pods that do not require stable identities or persistent storage. Pods created by a Deployment get new names on recreation. It supports rolling updates, rollbacks, and scaling by increasing replicas. Examples: frontend, backend services.
+StatefulSet is used for stateful applications that need stable network identities and persistent storage. Pods have stable, unique names (e.g., mongo-0, mongo-1) and start in a defined order. Persistent volumes are retained and reattached to pods even after restarts. It requires a Headless Service for DNS. Examples: databases like MongoDB
+  How does StatefulSet benefit over Deployment if both connect to volumes?
+
+How does StatefulSet benefit over Deployment if both connect to volumes?
+    
+⭐️ Answer:
+
+While both Deployment and StatefulSet can use volumes, the key difference is volume and pod identity management.
+In a Deployment, pods are stateless and get new names every time they restart or are replaced. Volumes may be ephemeral or reattached but without stable identity.
+In a StatefulSet, pods have stable, unique network identities (e.g., pod-0, pod-1) and persistent volumes are uniquely bound to each pod. This means even if a pod restarts or moves, it keeps the same volume and identity.
+  Why is StatefulSet beneficial compared to Deployment when both use volumes?
+
+
+ Why is StatefulSet beneficial compared to Deployment when both use volumes? 
+⭐️ Answer:
+
+StatefulSet provides stable, unique pod identities (e.g., pod names like mongo-0, mongo-1) which remain consistent across restarts, unlike Deployments where pod names change.
+It ensures persistent volumes are uniquely and consistently attached to the same pod, preserving data integrity and state.
+Pods in StatefulSet start and stop in a defined, sequential order, which is important for stateful applications like databases.
+StatefulSet uses a Headless Service to provide stable DNS entries for pods, enabling reliable network identity and communication.
+PersistentVolumeClaims (PVCs) are dynamically created and bound to each pod, with volume retention policies ensuring data is not lost on pod deletion.
+This architecture supports data consistency, durability, and ordered scaling, which are critical for stateful workloads.
+  Is PersistentVolume (PV) or PersistentVolumeClaim (PVC) namespaced in Kubernetes?
+
+s PersistentVolume (PV) or PersistentVolumeClaim (PVC) namespaced in Kubernetes?
+
+  PersistentVolumeClaim (PVC) is a namespaced resource, meaning it exists within a specific namespace. You create and manage PVCs inside namespaces.
+PersistentVolume (PV) is a cluster-wide resource, not bound to any namespace. PVs exist at the cluster level and can be claimed by PVCs from any namespace.
+
+  Have you done troubleshooting on Kubernetes, especially for errors like CrashLoopBackOff and ImagePullBackOff?
+
+⭐️ Answer:
+
+Yes, I have experience troubleshooting Kubernetes issues such as CrashLoopBackOff and ImagePullBackOff.
+For CrashLoopBackOff, it usually indicates application crashes. I check pod logs using kubectl logs <pod-name> -n <namespace> --previous to find stack traces or errors.
+For ImagePullBackOff, it indicates image registry or permission issues. I verify if the image exists in the registry, check node IAM roles for permissions, and confirm service account roles if using IRSA.
+I use kubectl describe pod <pod-name> -n <namespace> to see events and error messages that help identify the root cause.
+I also check resource limits and requests to ensure pods have enough CPU and memory to run without throttling or OOM kills.
+If needed, I review recent deployment changes, image tags, and environment variables for misconfigurations.
+For critical issues, I perform rollbacks using kubectl rollout undo deployment/<name> or Helm rollback commands.
+ 
+
+   In AWS VPC, where do you configure to route all outbound traffic through a firewall before reaching the destination? 
+⭐️ Answer:
+
+To route all outbound traffic through a firewall in AWS VPC, you configure this in the route tables associated with your subnets.
+You create a firewall appliance (could be a virtual firewall instance or AWS Network Firewall) deployed in a dedicated subnet.
+Then, in the route table for your private subnets, set the default route (0.0.0.0/0) to point to the firewall's ENI (Elastic Network Interface) or the firewall endpoint.
+This forces all outbound traffic to go through the firewall first before reaching the internet or other destinations.
+Additionally, you may need to configure security groups and network ACLs to allow traffic flow through the firewall.
+For centralized inspection, AWS Network Firewall or third-party firewall appliances from AWS Marketplace can be used. 
+
+  
+  What kinds of load balancers are there in Kubernetes and Azure?
+
+⭐️ Answer:
+
+
+In Kubernetes, there are several types of services acting as load balancers:
+
+ClusterIP: Exposes service inside the cluster, not accessible externally. Used with Ingress for external access.
+NodePort: Exposes service on node IP and port (30000-32767), accessible externally, mainly for testing.
+LoadBalancer: Uses cloud provider’s load balancer to expose service externally, suitable for production but costly if used per service.
+Headless: No cluster IP, used for direct pod access.
+ExternalName: Maps service to external DNS name.
+
+In Azure, load balancers include:
+
+Azure Load Balancer: Layer 4 load balancer for TCP/UDP traffic, internal and external.
+Azure Application Gateway: Layer 7 load balancer with SSL termination, WAF, and path-based routing.
+Azure Traffic Manager: DNS-based global traffic routing for high availability.
+Azure Front Door: Global Layer 7 load balancing with SSL offloading and acceleration.
+Azure Application Gateway Ingress Controller (AGIC): Used in AKS to route traffic to Kubernetes services based on Ingress resources.
+
+  Can you explain AWS Lambda and its usage?
+
+⭐️ Answer:
+
+AWS Lambda is a serverless compute service that runs code in response to events without managing servers.
+It supports multiple runtimes like Java, Python, Node.js, and more.
+Lambda automatically scales based on the number of incoming requests.
+You pay only for the compute time you consume, billed in milliseconds.
+Common use cases include API backends, data processing, automation, and event-driven workflows.
+To optimize Lambda cold starts, use Provisioned Concurrency to keep functions initialized and ready.
+Lambda integrates well with other AWS services like API Gateway, DynamoDB, SNS, and S3 for building scalable serverless applications.
+
+  Is AWS Lambda better than using an EC2 machine?
+
+⭐️ Answer:
+
+AWS Lambda is better for event-driven, short-lived, and serverless workloads where you don't want to manage servers. It automatically scales and you pay only for execution time.
+EC2 is better for long-running, stateful, or complex applications needing full control over the OS, networking, and custom configurations.
+Lambda reduces operational overhead and is cost-effective for intermittent workloads, while EC2 offers more flexibility and persistent compute resources.
+
+  What tech stack and tools does your organization use?
+
+⭐️ Answer:
+
+Our organization uses a modern microservices architecture deployed on managed Kubernetes platforms like EKS, AKS, and GKE.
+Frontend technologies include Angular and React, while backend services use FastAPI, Flask, Django, and SpringBoot.
+Databases include RDS/AzureSQL for authentication and NoSQL options like DynamoDB, CosmosDB, and MongoDB (running as Kubernetes StatefulSets).
+Caching is handled with Redis, and Elasticsearch is used for search functionality.
+For CI/CD, we use Jenkins, Azure DevOps, GitHub Actions, and ArgoCD with GitOps practices.
+Infrastructure as Code is managed with Terraform, CloudFormation, and Ansible.
+Monitoring and observability are implemented using Prometheus, Grafana, Loki, and ELK stack.
+Security and compliance tools include CloudTrail, Config, and integrated secret managemen
